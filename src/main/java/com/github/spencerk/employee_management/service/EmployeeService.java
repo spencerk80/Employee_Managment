@@ -10,8 +10,12 @@ import java.util.Optional;
 
 @Service
 public class EmployeeService {
+    private  final EmployeeDao employeeDao;
+
     @Autowired
-    EmployeeDao employeeDao;
+    public EmployeeService(EmployeeDao dao) {
+        employeeDao = dao;
+    }
 
     //Create
     public String saveEmployee(Employee employee) {
