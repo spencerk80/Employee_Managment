@@ -1,6 +1,9 @@
 package com.github.spencerk.employee_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.spencerk.employee_management.enums.EmployeeLevel;
+import com.github.spencerk.employee_management.util.Password;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,16 +19,22 @@ public class Employee {
     private String          fname,
                             lname,
                             email,
-                            phone;
+                            phone,
+                            username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String          pswd;
     private EmployeeLevel   employeeLevel;
 
     public Employee() {}
 
-    public Employee(String fname, String lname, String email, String phone, EmployeeLevel employeeLevel) {
+    public Employee(String fname, String lname, String email, String phone, String username,
+                    String pswd, EmployeeLevel employeeLevel) {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.phone = phone;
+        this.username = username;
+        this.pswd = Password.encodePassword(pswd);
         this.employeeLevel = employeeLevel;
     }
 
@@ -65,6 +74,20 @@ public class Employee {
         this.phone = phone;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPswd() { return pswd; }
+
+    public void setPswd(String pswd) {
+        this.pswd = Password.encodePassword(pswd);
+    }
+
     public EmployeeLevel getEmployeeLevel() {
         return employeeLevel;
     }
@@ -91,13 +114,10 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", fname='" + fname + '\'' +
-                ", lname='" + lname + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", employeeLevel=" + employeeLevel +
-                '}';
+        return String.format(
+                "Employee{\n\tid=%d,\n\tfname=%s,\n\tlname=%s,\n\temail=%s,\n\tphone=%s,\n\tusername=%s," +
+                        "\n\temployeeLevel=%s\n}",
+                id, fname, lname,email, phone, username, employeeLevel
+        );
     }
 }
